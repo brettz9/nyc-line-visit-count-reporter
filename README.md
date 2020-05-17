@@ -50,10 +50,8 @@ Defaults to `true`.
 
 ## To-dos
 
-1. Store results in array and print only at end, depending on whether user
-    wanted all file data aggregated or not (or wanted a specific file).
+1. Test with full coverage
 1. Point to own fork supporting `--reporter-options`
-1. Document any other options
 
 ## Possible to-dos
 

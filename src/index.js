@@ -3,6 +3,12 @@
 const {relative} = require('path');
 const {ReportBase} = require('istanbul-lib-report');
 
+const sorter = ([, visitCountA], [, visitCountB]) => {
+  return visitCountA > visitCountB
+    ? -1
+    : visitCountA < visitCountB ? 1 : 0;
+};
+
 /**
  * An nyc (Istanbul) reporter for highlighting visit counts of interest.
  * @extends ReportBase
@@ -48,6 +54,10 @@ class LineVisitCountReport extends ReportBase {
     this.reporterOptions = reporterOptions;
 
     this.file = opts.file || 'coverage-lvc.json';
+
+    if (this.reporterOptions.aggregate) {
+      this.aggregatedResults = [];
+    }
   }
 
   /**
@@ -66,7 +76,8 @@ class LineVisitCountReport extends ReportBase {
   onDetail (node) {
     const {
       path: absolutePath,
-      statementMap, s
+      statementMap,
+      s: statementKeyToCount
       // fnMap, f, branchMap, b
       // _coverageSchema, hash, contentHash
     } = node.getFileCoverage();
@@ -97,28 +108,27 @@ class LineVisitCountReport extends ReportBase {
       return;
     }
 
-    if (!aggregate) {
-      cw.write(
-        `Path: ${
-          absolutePaths ? absolutePath : `./${relativePath}`
-        }\n\n`
+    const path = absolutePaths ? absolutePath : `./${relativePath}`;
+    const statementKeyToCountEntries = Object.entries(statementKeyToCount);
+
+    if (aggregate) {
+      this.aggregatedResults.push(
+        ...statementKeyToCountEntries.map(([key, visitCount]) => {
+          return [key, visitCount, path, statementMap];
+        })
       );
+    } else {
+      cw.write(`Path: ${path}\n\n`);
+      statementKeyToCountEntries
+        .sort(sorter)
+        .slice(0, maxItems)
+        .forEach(([key, visitCount]) => {
+          const {start, end} = statementMap[key];
+          cw.write(`Visits: ${visitCount}; ${start.line}:${start.column}${
+            start.line === end.line ? '' : `${start.line}`
+          }-${end.column}\n\n`);
+        });
     }
-
-    const sorted = Object.entries(s).sort(
-      ([, visitCountA], [, visitCountB]) => {
-        return visitCountA > visitCountB
-          ? -1
-          : visitCountA < visitCountB ? 1 : 0;
-      }
-    );
-
-    sorted.slice(0, maxItems).forEach(([key, visitCount]) => {
-      const {start, end} = statementMap[key];
-      cw.write(`Visits: ${visitCount}; ${start.line}:${start.column}${
-        start.line === end.line ? '' : `${start.line}`
-      }-${end.column}\n\n`);
-    });
 
     cw.println('');
   }
@@ -128,6 +138,17 @@ class LineVisitCountReport extends ReportBase {
   */
   onEnd () {
     const cw = this.contentWriter;
+    const {maxItems} = this.reporterOptions;
+    if (this.aggregatedResults) {
+      this.aggregatedResults.sort(sorter).slice(0, maxItems).forEach(
+        ([key, visitCount, path, statementMap]) => {
+          const {start, end} = statementMap[key];
+          cw.write(`Visits: ${visitCount}; ${start.line}:${start.column}${
+            start.line === end.line ? '' : `${start.line}`
+          }-${end.column}; path: ${path}\n\n`);
+        }
+      );
+    }
     cw.close();
   }
 }
