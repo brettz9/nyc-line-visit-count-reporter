@@ -55,6 +55,8 @@ Defaults to `true`.
 
 ## Possible to-dos
 
+1. Interactive mode where one can selectively open files (with line/column
+    as IDEs such as Atom understand) by number.
 1. Others data besides on statements:
     1. **Top visited functions** (or the function within which a
         statement occurs) along with the function `name`. `line` and `column`
