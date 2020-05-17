@@ -1,6 +1,6 @@
 # nyc-line-visit-count-reporter
 
-***Note: This project is not yet functional.***
+***Note: This project is not yet fully tested.***
 
 ## Installation
 
