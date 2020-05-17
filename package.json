@@ -6,7 +6,9 @@
   "scripts": {
     "eslint": "eslint .",
     "mocha": "mocha --require chai/register-expect",
-    "nyc": "nyc --reporter-options \"maxItems=12\" --reporter ../../../src/index npm run mocha",
+    "nyc-self": "nyc --reporter-options \"maxItems=12\" --reporter ../../../src/index npm run mocha",
+    "nyc-report": "nyc report --reporter-options \"maxItems=12\" --reporter ../../../src/index",
+    "nyc": "nyc npm run mocha",
     "test": "npm run eslint && npm run nyc"
   },
   "repository": {

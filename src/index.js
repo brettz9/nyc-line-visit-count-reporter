@@ -34,7 +34,7 @@ class LineVisitCountReport extends ReportBase {
         });
       });
     } else {
-      ({reporterOptions} = opts);
+      ({reporterOptions = {}} = opts);
     }
     [
       ['absolutePaths', Boolean, false],

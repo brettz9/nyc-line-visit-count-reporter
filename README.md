@@ -10,8 +10,16 @@ npm i -D nyc-line-visit-count-reporter
 
 ## Usage
 
+For running tests, e.g., with Mocha:
+
 ```sh
 nyc --reporter-options <option1=val1> --reporter-options <option2=val2> --reporter nyc-line-visit-count-reporter npm run mocha
+```
+
+For reporting on results after the fact:
+
+```sh
+nyc report --reporter-options <option1=val1> --reporter-options <option2=val2> --reporter nyc-line-visit-count-reporter
 ```
 
 ## Reporter options
@@ -51,7 +59,6 @@ Defaults to `true`.
 ## To-dos
 
 1. Test with full coverage
-1. Check with / document / fix as needed for `nyc report`
 1. Point to own fork supporting `--reporter-options`
 
 ## Possible to-dos
