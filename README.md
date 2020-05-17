@@ -44,6 +44,8 @@ with each group listing the number of `maxItems` per file group.
 If `true`, will only list one set (limited by `maxItems`), sorting exclusively
 by visit count (though listing file name for each entry).
 
+The available file groups will be all covered files unless `file` is set.
+
 Defaults to `true`.
 
 ## To-dos
