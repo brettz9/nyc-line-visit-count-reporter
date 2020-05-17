@@ -8,6 +8,12 @@
 npm i -D nyc-line-visit-count-reporter
 ```
 
+## Usage
+
+```sh
+nyc --reporter-options <option1=val1> --reporter-options <option2=val2> --reporter nyc-line-visit-count-reporter npm run mocha
+```
+
 ## To-dos
 
 1. Store results in array and print only at end, depending on whether user
