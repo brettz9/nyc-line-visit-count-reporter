@@ -37,6 +37,11 @@ Defaults to `false`.
 
 How many items to display. Defaults to `10`.
 
+### `outputFile`
+
+A single relative file path (relative to the coverage directory) to which to
+write the output. Defaults to `null` (i.e., writes to console.
+
 ### `file`
 
 File, comma-separted list of files, or array of files to be reported on.

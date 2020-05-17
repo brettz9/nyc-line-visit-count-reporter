@@ -40,7 +40,8 @@ class LineVisitCountReport extends ReportBase {
       ['absolutePaths', Boolean, false],
       ['aggregate', Boolean, true],
       ['maxItems', Number, 10],
-      ['file', Array, []]
+      ['file', Array, []],
+      ['outputFile', String, null]
     ].forEach(([prop, type, deflt]) => {
       reporterOptions[prop] = {}.hasOwnProperty.call(reporterOptions, prop)
         ? (type === Array
@@ -53,7 +54,12 @@ class LineVisitCountReport extends ReportBase {
 
     this.reporterOptions = reporterOptions;
 
-    this.file = opts.file || null; // 'coverage-lvc.json';
+    // Pass `"-"` or `null` to use console writer and can apparently only
+    //  be relative to coverage directory
+    this.file = opts.file ||
+      // `opts.file` seems the programmatic way, but we want user control,
+      //  so we add our own `outputFile`
+      reporterOptions.outputFile || null; // 'coverage-lvc.json';
 
     if (this.reporterOptions.aggregate) {
       this.aggregatedResults = [];
