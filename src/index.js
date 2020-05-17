@@ -34,15 +34,15 @@ class LineVisitCountReport extends ReportBase {
       ['absolutePaths', Boolean, false],
       ['aggregate', Boolean, true],
       ['maxItems', Number, 10],
-      ['file', Array, null]
+      ['file', Array, []]
     ].forEach(([prop, type, deflt]) => {
       reporterOptions[prop] = {}.hasOwnProperty.call(reporterOptions, prop)
-        ? type === Array
-        : Array.isArray(reporterOptions[prop])
-          ? reporterOptions[prop]
-          : reporterOptions[prop].split(',')
-            ? type(reporterOptions[prop])
-            : deflt;
+        ? (type === Array
+          ? (Array.isArray(reporterOptions[prop])
+            ? reporterOptions[prop]
+            : reporterOptions[prop].split(','))
+          : type(reporterOptions[prop]))
+        : deflt;
     });
 
     this.reporterOptions = reporterOptions;
@@ -65,22 +65,45 @@ class LineVisitCountReport extends ReportBase {
    */
   onDetail (node) {
     const {
-      path, statementMap, s
+      path: absolutePath,
+      statementMap, s
       // fnMap, f, branchMap, b
       // _coverageSchema, hash, contentHash
     } = node.getFileCoverage();
+
+    /*
+    cw.write('s: ' + JSON.stringify(s) + '\n\n');
+    cw.write('statementMap: ' + JSON.stringify(statementMap) + '\n\n');
+
+    cw.write('f: ' + JSON.stringify(f) + '\n\n');
+    cw.write('fnMap: ' + JSON.stringify(fnMap) + '\n\n');
+
+    cw.write('b: ' + JSON.stringify(b) + '\n\n');
+    cw.write('branchMap: ' + JSON.stringify(branchMap) + '\n\n');
+    */
+
     const cw = this.contentWriter;
 
     const {
-      absolutePaths, maxItems
-      // aggregate, file
+      absolutePaths, maxItems, file, aggregate
     } = this.reporterOptions;
 
-    cw.write(
-      `Path: ${
-        absolutePaths ? path : `./${relative(process.cwd(), path)}`
-      }\n\n`
-    );
+    const relativePath = relative(process.cwd(), absolutePath);
+
+    if (file.length &&
+      !file.includes(relativePath) &&
+      !file.includes(absolutePath)
+    ) {
+      return;
+    }
+
+    if (!aggregate) {
+      cw.write(
+        `Path: ${
+          absolutePaths ? absolutePath : `./${relativePath}`
+        }\n\n`
+      );
+    }
 
     const sorted = Object.entries(s).sort(
       ([, visitCountA], [, visitCountB]) => {
@@ -96,17 +119,6 @@ class LineVisitCountReport extends ReportBase {
         start.line === end.line ? '' : `${start.line}`
       }-${end.column}\n\n`);
     });
-
-    /*
-    cw.write('s: ' + JSON.stringify(s) + '\n\n');
-    cw.write('statementMap: ' + JSON.stringify(statementMap) + '\n\n');
-
-    cw.write('f: ' + JSON.stringify(f) + '\n\n');
-    cw.write('fnMap: ' + JSON.stringify(fnMap) + '\n\n');
-
-    cw.write('b: ' + JSON.stringify(b) + '\n\n');
-    cw.write('branchMap: ' + JSON.stringify(branchMap) + '\n\n');
-    */
 
     cw.println('');
   }
