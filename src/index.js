@@ -32,11 +32,17 @@ class LineVisitCountReport extends ReportBase {
     }
     [
       ['absolutePaths', Boolean, false],
-      ['maxItems', Number, 10]
+      ['aggregate', Boolean, true],
+      ['maxItems', Number, 10],
+      ['file', Array, null]
     ].forEach(([prop, type, deflt]) => {
       reporterOptions[prop] = {}.hasOwnProperty.call(reporterOptions, prop)
-        ? type(reporterOptions[prop])
-        : deflt;
+        ? type === Array
+        : Array.isArray(reporterOptions[prop])
+          ? reporterOptions[prop]
+          : reporterOptions[prop].split(',')
+            ? type(reporterOptions[prop])
+            : deflt;
     });
 
     this.reporterOptions = reporterOptions;
@@ -65,7 +71,10 @@ class LineVisitCountReport extends ReportBase {
     } = node.getFileCoverage();
     const cw = this.contentWriter;
 
-    const {absolutePaths, maxItems} = this.reporterOptions;
+    const {
+      absolutePaths, maxItems
+      // aggregate, file
+    } = this.reporterOptions;
 
     cw.write(
       `Path: ${

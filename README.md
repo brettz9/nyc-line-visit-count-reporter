@@ -27,6 +27,25 @@ Defaults to `false`.
 
 How many items to display. Defaults to `10`.
 
+### `file`
+
+File, comma-separted list of files, or array of files to be reported on.
+
+Defaults to not being used.
+
+### `aggregate`
+
+Whether to calculate `maxItems` relative to the results across files in
+aggregate rather than per file.
+
+If `false`, will group the items by file,
+with each group listing the number of `maxItems` per file group.
+
+If `true`, will only list one set (limited by `maxItems`), sorting exclusively
+by visit count (though listing file name for each entry).
+
+Defaults to `true`.
+
 ## To-dos
 
 1. Store results in array and print only at end, depending on whether user
