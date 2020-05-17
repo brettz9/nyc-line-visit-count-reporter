@@ -17,11 +17,11 @@ npm i -D nyc-line-visit-count-reporter
 ## Possible to-dos
 
 1. Others data besides on statements:
-  1. **Top visited functions** (or the function within which a
-      statement occurs) along with the function `name`. `line` and `column`
-      of `loc.start` and `loc.end` (or `decl.start` and `decl.end`?)
-  1. **Top visited branches**, along with its `type` (e.g., switch) and
-      whether it was for an `if` or `else` (the first or second item in
-      the `b` array). `line` and `column` of `loc.start` and `loc.end`
-      (shouldn't need `locations` which list locations of all branches,
-      e.g., of a switch or if-else)
+    1. **Top visited functions** (or the function within which a
+        statement occurs) along with the function `name`. `line` and `column`
+        of `loc.start` and `loc.end` (or `decl.start` and `decl.end`?)
+    1. **Top visited branches**, along with its `type` (e.g., switch) and
+        whether it was for an `if` or `else` (the first or second item in
+        the `b` array). `line` and `column` of `loc.start` and `loc.end`
+        (shouldn't need `locations` which list locations of all branches,
+        e.g., of a switch or if-else)
