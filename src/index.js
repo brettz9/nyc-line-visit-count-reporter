@@ -53,7 +53,7 @@ class LineVisitCountReport extends ReportBase {
 
     this.reporterOptions = reporterOptions;
 
-    this.file = opts.file || 'coverage-lvc.json';
+    this.file = opts.file || null; // 'coverage-lvc.json';
 
     if (this.reporterOptions.aggregate) {
       this.aggregatedResults = [];
