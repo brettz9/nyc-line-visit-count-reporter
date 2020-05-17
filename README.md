@@ -10,6 +10,8 @@ npm i -D nyc-line-visit-count-reporter
 
 ## Usage
 
+Note that currently for this reporter to work, you cannot set `instrument` to `false`.
+
 For running tests, e.g., with Mocha:
 
 ```sh
@@ -59,6 +61,8 @@ Defaults to `true`.
 ## To-dos
 
 1. Test with full coverage
+1. Avoid need for `instrument: false`, following "html" report for an example
+    of iterating on `getChildren` ourselves.
 1. Point to own fork supporting `--reporter-options`
 
 ## Possible to-dos
