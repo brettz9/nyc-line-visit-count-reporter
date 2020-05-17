@@ -14,7 +14,32 @@ class LineVisitCountReport extends ReportBase {
    */
   constructor (opts) {
     super();
-    this.reporterOptions = opts.reporterOptions;
+    let reporterOptions;
+    if (typeof opts.reporterOptions === 'string') {
+      opts.reporterOptions = [opts.reporterOptions];
+    }
+    if (Array.isArray(opts.reporterOptions)) {
+      reporterOptions = {};
+      opts.reporterOptions.forEach((optionString) => {
+        const reporterOptionPairs = optionString.split(',');
+        reporterOptionPairs.forEach((reporterOptionPair) => {
+          const [optionKey, optionValue] = reporterOptionPair.split('=');
+          reporterOptions[optionKey] = optionValue;
+        });
+      });
+    } else {
+      ({reporterOptions} = opts);
+    }
+    [
+      ['absolutePaths', Boolean, false],
+      ['maxItems', Number, 10]
+    ].forEach(([prop, type, deflt]) => {
+      reporterOptions[prop] = {}.hasOwnProperty.call(reporterOptions, prop)
+        ? type(reporterOptions[prop])
+        : deflt;
+    });
+
+    this.reporterOptions = reporterOptions;
 
     this.file = opts.file || 'coverage-lvc.json';
   }
@@ -40,10 +65,7 @@ class LineVisitCountReport extends ReportBase {
     } = node.getFileCoverage();
     const cw = this.contentWriter;
 
-    const {
-      absolutePaths = false,
-      maxItems = 10
-    } = this.reporterOptions;
+    const {absolutePaths, maxItems} = this.reporterOptions;
 
     cw.write(
       `Path: ${

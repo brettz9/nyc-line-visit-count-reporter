@@ -6,7 +6,7 @@
   "scripts": {
     "eslint": "eslint .",
     "mocha": "mocha --require chai/register-expect",
-    "nyc": "nyc --reporter-options abc=def --reporter-options ghi=fbi --reporter ../../../src/index npm run mocha",
+    "nyc": "nyc --reporter-options \"maxItems=12\" --reporter ../../../src/index npm run mocha",
     "test": "npm run eslint && npm run nyc"
   },
   "repository": {

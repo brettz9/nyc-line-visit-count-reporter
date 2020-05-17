@@ -14,11 +14,24 @@ npm i -D nyc-line-visit-count-reporter
 nyc --reporter-options <option1=val1> --reporter-options <option2=val2> --reporter nyc-line-visit-count-reporter npm run mocha
 ```
 
+## Reporter options
+
+### `absolutePaths`
+
+Whether to show absolute paths instead of paths relative to the current
+working directory.
+
+Defaults to `false`.
+
+### `maxItems`
+
+How many items to display. Defaults to `10`.
+
 ## To-dos
 
 1. Store results in array and print only at end, depending on whether user
     wanted all file data aggregated or not (or wanted a specific file).
-1. Document reporter options (`absolutePaths`, `maxItems`, ...)
+1. Document any other options
 
 ## Possible to-dos
 
