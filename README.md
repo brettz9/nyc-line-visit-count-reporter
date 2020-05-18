@@ -44,24 +44,24 @@ write the output. Defaults to `null` (i.e., writes to console.
 
 ### `file`
 
-File, comma-separted list of files, or array of files to be reported on.
+File, semi-colon-separated list of files, or array of files to be reported on.
 
 Defaults to not being used.
 
-### `aggregate`
+### `noAggregate`
 
-Whether to calculate `maxItems` relative to the results across files in
-aggregate rather than per file.
+Whether to avoid calculating `maxItems` relative to the results across
+files in aggregate rather than per file.
 
-If `false`, will group the items by file,
-with each group listing the number of `maxItems` per file group.
+If `true`, will group the items by file, with each group listing the
+number of `maxItems` per file group.
 
-If `true`, will only list one set (limited by `maxItems`), sorting exclusively
-by visit count (though listing file name for each entry).
+If `false`, will only list one set (limited by `maxItems`), sorting
+exclusively by visit count (though listing file name for each entry).
 
 The available file groups will be all covered files unless `file` is set.
 
-Defaults to `true`.
+Defaults to `false`.
 
 ## To-dos
 

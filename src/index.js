@@ -10,6 +10,15 @@ const sorter = ([, visitCountA], [, visitCountB]) => {
 };
 
 /**
+* @typedef {PlainObject} ReporterOptions
+* @property {string} file
+* @property {boolean} absolutePaths
+* @property {boolean} noAggregate
+* @property {Integer} maxItems
+* @property {string} outputFile
+*/
+
+/**
  * An nyc (Istanbul) reporter for highlighting visit counts of interest.
  * @extends ReportBase
  */
@@ -17,16 +26,21 @@ class LineVisitCountReport extends ReportBase {
   /**
    * @param {PlainObject} opts
    * @param {string} opts.file
+   * @param {ReporterOptions[]|ReporterOptions} opts.reporterOptions
    */
   constructor (opts) {
     super();
     let reporterOptions;
-    if (typeof opts.reporterOptions === 'string') {
-      opts.reporterOptions = [opts.reporterOptions];
-    }
     if (Array.isArray(opts.reporterOptions)) {
       reporterOptions = {};
       opts.reporterOptions.forEach((optionString) => {
+        // This seems only necessary for our tests
+        if (typeof optionString === 'object') {
+          Object.entries(optionString).forEach(([optionKey, optionValue]) => {
+            reporterOptions[optionKey] = optionValue;
+          });
+          return;
+        }
         const reporterOptionPairs = optionString.split(',');
         reporterOptionPairs.forEach((reporterOptionPair) => {
           const [optionKey, optionValue] = reporterOptionPair.split('=');
@@ -36,19 +50,26 @@ class LineVisitCountReport extends ReportBase {
     } else {
       ({reporterOptions = {}} = opts);
     }
+    const stringToBoolean = (option) => {
+      return option === 'true'
+        ? true
+        : option === 'false'
+          ? false
+          : Boolean(Number.parseInt(option));
+    };
     [
-      ['absolutePaths', Boolean, false],
-      ['aggregate', Boolean, true],
+      ['absolutePaths', stringToBoolean, false],
+      ['noAggregate', stringToBoolean, false],
       ['maxItems', Number, 10],
-      ['file', Array, []],
+      ['file', (option) => {
+        return Array.isArray(option)
+          ? option
+          : option.split(';');
+      }, []],
       ['outputFile', String, null]
     ].forEach(([prop, type, deflt]) => {
       reporterOptions[prop] = {}.hasOwnProperty.call(reporterOptions, prop)
-        ? (type === Array
-          ? (Array.isArray(reporterOptions[prop])
-            ? reporterOptions[prop]
-            : reporterOptions[prop].split(','))
-          : type(reporterOptions[prop]))
+        ? type(reporterOptions[prop])
         : deflt;
     });
 
@@ -61,7 +82,7 @@ class LineVisitCountReport extends ReportBase {
       //  so we add our own `outputFile`
       reporterOptions.outputFile || null; // 'coverage-lvc.json';
 
-    if (this.reporterOptions.aggregate) {
+    if (!this.reporterOptions.noAggregate) {
       this.aggregatedResults = [];
     }
   }
@@ -77,9 +98,21 @@ class LineVisitCountReport extends ReportBase {
 
   /**
    * @param {Node} node
+   * @param {Context} context
    * @returns {void}
    */
-  onDetail (node) {
+  /*
+  onSummary (node, context) {
+    // return this.onDetail(node, context);
+  }
+  */
+
+  /**
+   * @param {Node} node
+   * @param {Context} context
+   * @returns {void}
+   */
+  onDetail (node, context) {
     const {
       path: absolutePath,
       statementMap,
@@ -102,7 +135,7 @@ class LineVisitCountReport extends ReportBase {
     const cw = this.contentWriter;
 
     const {
-      absolutePaths, maxItems, file, aggregate
+      absolutePaths, maxItems, file, noAggregate
     } = this.reporterOptions;
 
     const relativePath = relative(process.cwd(), absolutePath);
@@ -117,7 +150,7 @@ class LineVisitCountReport extends ReportBase {
     const path = absolutePaths ? absolutePath : `./${relativePath}`;
     const statementKeyToCountEntries = Object.entries(statementKeyToCount);
 
-    if (aggregate) {
+    if (!noAggregate) {
       this.aggregatedResults.push(
         ...statementKeyToCountEntries.map(([key, visitCount]) => {
           return [key, visitCount, path, statementMap];
@@ -131,8 +164,8 @@ class LineVisitCountReport extends ReportBase {
         .forEach(([key, visitCount]) => {
           const {start, end} = statementMap[key];
           cw.write(`Visits: ${visitCount}; ${start.line}:${start.column}${
-            start.line === end.line ? '' : `${start.line}`
-          }-${end.column}\n\n`);
+            start.line === end.line ? '-' : `-${end.line}:`
+          }${end.column}\n\n`);
         });
     }
 
@@ -150,8 +183,8 @@ class LineVisitCountReport extends ReportBase {
         ([key, visitCount, path, statementMap]) => {
           const {start, end} = statementMap[key];
           cw.write(`Visits: ${visitCount}; ${start.line}:${start.column}${
-            start.line === end.line ? '' : `${start.line}`
-          }-${end.column}; path: ${path}\n\n`);
+            start.line === end.line ? '-' : `-${end.line}`
+          }${end.column}; path: ${path}\n\n`);
         }
       );
     }

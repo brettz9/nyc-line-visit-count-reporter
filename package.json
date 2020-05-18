@@ -8,7 +8,7 @@
     "mocha": "mocha --require chai/register-expect",
     "nyc-self": "nyc --reporter-options \"maxItems=12\" --reporter ../../../src/index npm run mocha",
     "nyc-report": "nyc report --reporter-options \"maxItems=12\" --reporter ../../../src/index",
-    "nyc": "nyc npm run mocha",
+    "nyc": "rm -Rf node_modules/.cache && nyc npm run mocha",
     "test": "npm run eslint && npm run nyc"
   },
   "repository": {
@@ -20,6 +20,11 @@
     "istanbul",
     "reporter"
   ],
+  "nyc": {
+    "reporter-options": {
+      "maxItems": 12
+    }
+  },
   "author": "Brett Zamir <brettz9@yahoo.com> (http://brett-zamir.me/)",
   "contributors": [],
   "engines": {
@@ -54,7 +59,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-unicorn": "^20.0.0",
     "mocha": "^7.1.2",
-    "nyc": "^15.0.1",
+    "nyc": "https://github.com/brettz9/nyc#reporter-options",
     "typescript": "^3.9.2"
   }
 }
