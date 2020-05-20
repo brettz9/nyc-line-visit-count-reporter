@@ -81,9 +81,11 @@ Defaults to `false`.
 
 ## Possible to-dos
 
-1. Interactive mode where one can selectively open files (with line/column
+1. **Interactive mode** where one can selectively open files (with line/column
     as IDEs such as Atom understand) by number.
 1. Could add `es6-template-strings` to allow user to control appearance
+1. Discuss **global installation** (esp. with `nyc report` which doesn't
+    require knowing exact testing requirements)?
 1. Others data besides on statements:
     1. **Top visited functions** (or the function within which a
         statement occurs) along with the function `name`. `line` and `column`
