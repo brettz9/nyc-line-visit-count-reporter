@@ -31,6 +31,9 @@ class LineVisitCountReport extends ReportBase {
   constructor (opts) {
     super();
     let reporterOptions;
+    if (typeof opts.reporterOptions === 'string') {
+      opts.reporterOptions = [opts.reporterOptions];
+    }
     if (Array.isArray(opts.reporterOptions)) {
       reporterOptions = {};
       opts.reporterOptions.forEach((optionString) => {
@@ -103,6 +106,8 @@ class LineVisitCountReport extends ReportBase {
    */
   /*
   onSummary (node, context) {
+    // node.getFileCoverage()
+    // node.getChildren();
     // return this.onDetail(node, context);
   }
   */
@@ -175,7 +180,7 @@ class LineVisitCountReport extends ReportBase {
   /**
   * @returns {void}
   */
-  onEnd () {
+  onEnd (/* node */) {
     const cw = this.contentWriter;
     const {maxItems} = this.reporterOptions;
     if (this.aggregatedResults) {
