@@ -24,6 +24,16 @@ For reporting on results after the fact:
 nyc report --reporter-options <option1=val1> --reporter-options <option2=val2> --reporter nyc-line-visit-count-reporter
 ```
 
+For example, running the this command:
+
+```sh
+nyc --reporter nyc-line-visit-count-reporter mocha --recursive --require @babel/register --reporter progress --timeout 9000
+```
+
+...against the project `eslint-plugin-jsdoc` currently gives:
+
+[![screenshot.png](https://raw.githubusercontent.com/brettz9/nyc-line-visit-count-reporter/master/images/screenshot.png?sanitize=true)](images/screenshot.png)
+
 ## Reporter options
 
 ### `absolutePaths`
