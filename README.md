@@ -1,6 +1,6 @@
 # nyc-line-visit-count-reporter
 
-***Note: This project is not yet fully tested.***
+***Note: This project is somewhat unstable. It also requires use of an [nyc fork](https://github.com/brettz9/nyc.git#reporter-options) in order to get options passed to it.***
 
 ## Installation
 
@@ -65,8 +65,9 @@ Defaults to `false`.
 
 ## To-dos
 
-1. Test with full coverage
-1. Point to own fork supporting `--reporter-options`
+1. Get tests working consistently with coverage
+1. See about avoiding need for fork `--reporter-options`; see
+    [nyc PR# 1312](https://github.com/istanbuljs/nyc/pull/1312).
 
 ## Possible to-dos
 
